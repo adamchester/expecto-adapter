@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Fuchu.Adapter</id>
+    <version>1.0.0.12</version>
+    <title>Fuchu.Adapter</title>
+    <authors>Interact Software</authors>
+    <owners>idg10</owners>
+    <licenseUrl>http://example.com/temp</licenseUrl>
+    <projectUrl>http://example.com/temp</projectUrl>
+    <iconUrl>http://example.com/temp</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Visual Studio test adapter for Fuchu. Shows Fuchu tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright © 2016 Ian Griffiths</copyright>
+    <tags>Fuchu, Visual Studio, Test Adapter</tags>
+    <references>
+    </references>
+  </metadata>
+  <!-- The convention for analyzers is to put language agnostic dlls in analyzers\portable50 and language specific analyzers in either analyzers\portable50\cs or analyzers\portable50\vb -->
+  <files>
+    <file src="Fuchu.Adapter/bin/Release/Fuchu.VisualStudio.TestAdapter.dll" target="lib\net45\Fuchu.VisualStudio.TestAdapter.dll" />
+    <file src="Fuchu.Adapter/bin/Release/Fuchu.dll" target="lib\net45\Fuchu.dll" />
+    <!--<file src="Fuchu.Adapter/bin/Release/Fuchu.Adapter.dll" target="lib\Fuchu.Adapter.dll" />-->
+  </files>
+</package>

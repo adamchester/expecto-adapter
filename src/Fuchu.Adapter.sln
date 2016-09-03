@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7777BB6E-4803-4898-8C82-A7897417B0E6}"
+	ProjectSection(SolutionItems) = preProject
+		Fuchu.Adapter.nuspec = Fuchu.Adapter.nuspec
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fuchu.VisualStudio.TestAdapter", "Fuchu.Adapter\Fuchu.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F583D48-8771-45B4-9793-60A69DB06C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F583D48-8771-45B4-9793-60A69DB06C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F583D48-8771-45B4-9793-60A69DB06C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F583D48-8771-45B4-9793-60A69DB06C61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
