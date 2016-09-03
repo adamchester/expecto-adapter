@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7777BB6E-4803-4898-8C82-A7897417B0E6}"
 	ProjectSection(SolutionItems) = preProject
-		Fuchu.Adapter.nuspec = Fuchu.Adapter.nuspec
+		Fuchu.Adapter\Fuchu.Adapter.nuspec = Fuchu.Adapter\Fuchu.Adapter.nuspec
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject

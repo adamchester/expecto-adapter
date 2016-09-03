@@ -2,24 +2,22 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Fuchu.Adapter</id>
-    <version>0.1.0.0</version>
+    <version>0.1.0.11</version>
     <title>Fuchu.Adapter</title>
     <authors>Interact Software</authors>
     <owners>idg10</owners>
-    <licenseUrl>http://example.com/temp</licenseUrl>
-    <projectUrl>http://example.com/temp</projectUrl>
-    <iconUrl>http://example.com/temp</iconUrl>
+    <licenseUrl>https://github.com/interactsw/fuchu-adapter/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/interactsw/fuchu-adapter</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Visual Studio test adapter for Fuchu. Shows Fuchu tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright © 2016 Ian Griffiths</copyright>
-    <tags>Fuchu, Visual Studio, Test Adapter</tags>
+    <tags>Fuchu, Visual Studio, Test Adapter, testadapter</tags>
     <references>
     </references>
   </metadata>
   <files>
-    <file src="../src/Fuchu.Adapter/bin/Release/Fuchu.VisualStudio.TestAdapter.dll" target="lib\net45\Fuchu.VisualStudio.TestAdapter.dll" />
-    <file src="../src/Fuchu.Adapter/bin/Release/Fuchu.dll" target="lib\net45\Fuchu.dll" />
-    <!--<file src="Fuchu.Adapter/bin/Release/Fuchu.Adapter.dll" target="lib\Fuchu.Adapter.dll" />-->
+    <file src="bin/Release/Fuchu.VisualStudio.TestAdapter.dll" target="lib\net45\Fuchu.VisualStudio.TestAdapter.dll" />
+    <file src="bin/Release/Fuchu.dll" target="lib\net45\Fuchu.dll" />
   </files>
 </package>

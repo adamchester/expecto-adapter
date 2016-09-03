@@ -54,6 +54,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Ids.fs" />
     <Compile Include="RemotingHelpers.fs" />
+    <Compile Include="Filters.fs" />
     <Compile Include="Discovery.fs" />
     <Compile Include="Execution.fs" />
     <None Include="Script.fsx" />

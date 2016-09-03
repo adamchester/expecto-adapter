@@ -13,6 +13,7 @@ open Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging
 open Fuchu
 open Fuchu.Impl
 
+open Filters
 open RemotingHelpers
 
 type DiscoverProxy() =
@@ -54,7 +55,7 @@ type Discoverer() =
              discoverySink: ITestCaseDiscoverySink): unit =
             try
                 logger.SendMessage(Logging.TestMessageLevel.Informational, System.AppDomain.CurrentDomain.BaseDirectory)
-                for source in sources do
+                for source in (sourcesUsingFuchu sources) do
                     use host = new TestAssemblyHost(source)
 //                    let assemblyFullPath = Path.GetFullPath(source)
 //                    let configFullPath = assemblyFullPath + ".config";
