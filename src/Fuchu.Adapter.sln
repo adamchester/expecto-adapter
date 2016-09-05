@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7777BB6E
 	ProjectSection(SolutionItems) = preProject
 		Fuchu.Adapter\Fuchu.Adapter.nuspec = Fuchu.Adapter\Fuchu.Adapter.nuspec
 		NuGet.Config = NuGet.Config
+		..\scripts\build\SetBuildVersion.ps1 = ..\scripts\build\SetBuildVersion.ps1
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fuchu.VisualStudio.TestAdapter", "Fuchu.Adapter\Fuchu.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"

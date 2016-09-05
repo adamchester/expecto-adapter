@@ -4,7 +4,7 @@ Param(
 )
 
 $majorMinorVersionNumber = "1.0"
-$thirdVersionPart = "0"
+$thirdVersionPart = "1"
 $basicVersion = $majorMinorVersionNumber + ".0.0"
 $fullVersionNumber = $majorMinorVersionNumber + "." + $thirdVersionPart + "." + $BuildCounter
 
