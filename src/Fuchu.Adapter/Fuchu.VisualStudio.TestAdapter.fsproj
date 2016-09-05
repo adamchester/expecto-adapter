@@ -55,6 +55,7 @@
     <Compile Include="Ids.fs" />
     <Compile Include="RemotingHelpers.fs" />
     <Compile Include="Filters.fs" />
+    <Compile Include="SourceLocation.fs" />
     <Compile Include="Discovery.fs" />
     <Compile Include="Execution.fs" />
     <None Include="Script.fsx" />
@@ -71,6 +72,22 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
       <HintPath>..\packages\Microsoft.VisualStudio.TestPlatform.ObjectModel.0.0.1\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />

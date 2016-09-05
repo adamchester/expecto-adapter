@@ -1,10 +1,7 @@
 ﻿namespace Discovery
 
 open System
-open System.IO
 open System.Reflection
-open System.Security
-open System.Security.Permissions
 
 open Microsoft.VisualStudio.TestPlatform.ObjectModel
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter
@@ -15,32 +12,64 @@ open Fuchu.Impl
 
 open Filters
 open RemotingHelpers
+open SourceLocation
+
+type DiscoveryResult =
+    struct
+        val TestCode:  string
+        val TypeName:  string
+        val MethodName: string
+        new(testCode: string, typeName: string, methodName: string) =
+            { TestCode = testCode; TypeName = typeName; MethodName = methodName }
+    end
 
 type DiscoverProxy() =
     inherit MarshalByRefObjectInfiniteLease()
+
+    let isFsharpFuncType t =
+        let baseType =
+            let rec findBase (t:Type) =
+                if t.BaseType = typeof<obj> then
+                    t
+                else
+                    findBase t.BaseType
+            findBase t
+        baseType.IsGenericType && baseType.GetGenericTypeDefinition() = typedefof<FSharpFunc<unit, unit>>
+
+    // If the test function we've found doesn't seem to be in the test assembly, it's
+    // possible we're looking at an FsCheck 'testProperty' style check. In that case,
+    // the function of interest (i.e., the one in the test assembly, and for which we
+    // might be able to find corresponding source code) is referred to in a field
+    // of the function object.
+    let getFuncTypeToUse (testFunc:TestCode) (asm:Assembly) =
+        let t = testFunc.GetType()
+        if t.Assembly.FullName = asm.FullName then
+            t
+        else
+            let nestedFunc =
+                 t.GetFields()
+                |> Seq.tryFind (fun f -> isFsharpFuncType f.FieldType)
+            match nestedFunc with
+                | Some f -> f.GetValue(testFunc).GetType()
+                | None -> t
+
     member this.DiscoverTests(source: string) =
-//        let rec getTests (test:Test) parentName testList =
-//            match test with
-//            | TestCase tc ->
-//                 List.append testList [parentName]
-//            | TestList tl ->
-//                tl
-//                |> Seq.map (fun test -> getTests test parentName testList)
-//                |> List.concat
-//            | TestLabel (label, test) ->
-//                let fullName = 
-//                    if String.IsNullOrEmpty parentName
-//                        then label
-//                        else parentName + "/" + label
-//                getTests test fullName testList
         let asm = Assembly.LoadFrom(source)
         let tests =
             match testFromAssembly (asm) with
             | Some t -> t
             | None -> TestList []
-        //getTests tests "" []
         Fuchu.Test.toTestCodeList tests
-        |> Seq.map (fun (name, _) -> name)
+        |> Seq.map (fun (name, testFunc) ->
+            let t = getFuncTypeToUse testFunc asm
+            let m =
+                query
+                  {
+                    for m in t.GetMethods() do
+                    where ((m.Name = "Invoke") && (m.DeclaringType = t))
+                    exactlyOne
+                  }
+            new DiscoveryResult(name, t.FullName, m.Name))
         |> Array.ofSeq
 
 [<FileExtension(".dll")>]
@@ -54,29 +83,19 @@ type Discoverer() =
              logger: IMessageLogger,
              discoverySink: ITestCaseDiscoverySink): unit =
             try
-                logger.SendMessage(Logging.TestMessageLevel.Informational, System.AppDomain.CurrentDomain.BaseDirectory)
-                for source in (sourcesUsingFuchu sources) do
-                    use host = new TestAssemblyHost(source)
-//                    let assemblyFullPath = Path.GetFullPath(source)
-//                    let configFullPath = assemblyFullPath + ".config";
-//                    let configFullPath =
-//                        if File.Exists(configFullPath)
-//                            then configFullPath
-//                            else null
-//                    let setup =
-//                        new AppDomainSetup
-//                            (ApplicationBase = Path.GetDirectoryName(assemblyFullPath),
-//                             ApplicationName = Guid.NewGuid().ToString(),
-//                             ConfigurationFile = configFullPath)
-//                    let appDomain = AppDomain.CreateDomain(setup.ApplicationName, null, setup, new PermissionSet(PermissionState.Unrestricted))
-//                    try
-//                        let discoverProxy = appDomain.CreateInstanceAndUnwrap((typeof<DiscoverProxy>).Assembly.FullName, typeof<DiscoverProxy>.FullName) :?> DiscoverProxy
+                for assemblyPath in (sourcesUsingFuchu sources) do
+                    use host = new TestAssemblyHost(assemblyPath)
                     let discoverProxy = host.CreateInAppdomain<DiscoverProxy>()
-                    let testList = discoverProxy.DiscoverTests(source)
-                    for test in testList do
-                        discoverySink.SendTestCase(new TestCase(test, Ids.ExecutorUri, source))
-//                    finally
-//                        AppDomain.Unload(appDomain)
+                    let testList = discoverProxy.DiscoverTests(assemblyPath)
+                    let locationFinder = new SourceLocationFinder(assemblyPath)
+                    for { TestCode = code; TypeName = typeName; MethodName = methodName } in testList do
+                        let tc = new TestCase(code, Ids.ExecutorUri, assemblyPath)
+                        match locationFinder.getSourceLocation typeName methodName with
+                        | Some location ->
+                            tc.CodeFilePath <- location.SourcePath
+                            tc.LineNumber <- location.LineNumber
+                        | None -> ()
+                        discoverySink.SendTestCase(tc)
             with
             | x -> logger.SendMessage(Logging.TestMessageLevel.Error, x.ToString())
 

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Fuchu.Adapter</id>
-    <version>0.1.0.11</version>
+    <version>0.1.0.0</version>
     <title>Fuchu.Adapter</title>
     <authors>Interact Software</authors>
     <owners>idg10</owners>
@@ -18,6 +18,8 @@
   </metadata>
   <files>
     <file src="bin/Release/Fuchu.VisualStudio.TestAdapter.dll" target="lib\net45\Fuchu.VisualStudio.TestAdapter.dll" />
-    <file src="bin/Release/Fuchu.dll" target="lib\net45\Fuchu.dll" />
+    <file src="bin/Release/Mono.Cecil.dll" target="lib\net45\Mono.Cecil.dll" />
+    <file src="bin/Release/Mono.Cecil.Pdb.dll" target="lib\net45\Mono.Cecil.Pdb.dll" />
+    <file src="bin/Release/Mono.Cecil.Rocks.dll" target="lib\net45\Mono.Cecil.Rocks.dll" />
   </files>
 </package>
