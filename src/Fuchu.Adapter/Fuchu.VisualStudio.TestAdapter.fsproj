@@ -51,7 +51,9 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="..\CommonAssemblyInfo.fs">
+      <Link>CommonAssemblyInfo.fs</Link>
+    </Compile>
     <Compile Include="Ids.fs" />
     <Compile Include="RemotingHelpers.fs" />
     <Compile Include="Filters.fs" />
