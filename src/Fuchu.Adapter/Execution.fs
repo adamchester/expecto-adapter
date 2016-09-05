@@ -126,14 +126,15 @@ type FuchuTestExecutor() =
     let mutable (executors:AssemblyExecutor []) = null
 
     let runAllExecutors () =
+        executors
+        |> Seq.map
+            (fun executor -> async { executor.ExecuteTests() })
+        |> Async.Parallel
+        |> Async.RunSynchronously
+        |> ignore
         for executor in executors do
-            executor.ExecuteTests()
-//        executors
-//        |> Seq.map
-//            (fun executor -> async { executor.ExecuteTests() })
-//        |> Async.Parallel
-//        |> Async.RunSynchronously
-//        |> ignore
+            (executor :> IDisposable).Dispose()
+        executors <- null
 
     interface ITestExecutor with
         member x.Cancel(): unit = 
