@@ -1,6 +1,7 @@
 ﻿namespace Discovery
 
 open System
+open System.Linq
 open System.Reflection
 
 open Microsoft.VisualStudio.TestPlatform.ObjectModel
@@ -23,7 +24,13 @@ type DiscoveryResult =
             { TestCode = testCode; TypeName = typeName; MethodName = methodName }
     end
 
-type DiscoverProxy() =
+type VsCallbackProxy(log: IMessageLogger) =
+    inherit MarshalByRefObjectInfiniteLease()
+
+    member this.LogInfo (message:string) =
+        log.SendMessage(TestMessageLevel.Informational, message)
+
+type DiscoverProxy(vsCallback:VsCallbackProxy) =
     inherit MarshalByRefObjectInfiniteLease()
 
     let isFsharpFuncType t =
@@ -55,22 +62,26 @@ type DiscoverProxy() =
 
     member this.DiscoverTests(source: string) =
         let asm = Assembly.LoadFrom(source)
-        let tests =
-            match testFromAssembly (asm) with
-            | Some t -> t
-            | None -> TestList []
-        Fuchu.Test.toTestCodeList tests
-        |> Seq.map (fun (name, testFunc) ->
-            let t = getFuncTypeToUse testFunc asm
-            let m =
-                query
-                  {
-                    for m in t.GetMethods() do
-                    where ((m.Name = "Invoke") && (m.DeclaringType = t))
-                    exactlyOne
-                  }
-            new DiscoveryResult(name, t.FullName, m.Name))
-        |> Array.ofSeq
+        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Fuchu")) then
+            vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Fuchu" source)
+            Array.empty
+        else            
+            let tests =
+                match testFromAssembly (asm) with
+                | Some t -> t
+                | None -> TestList []
+            Fuchu.Test.toTestCodeList tests
+            |> Seq.map (fun (name, testFunc) ->
+                let t = getFuncTypeToUse testFunc asm
+                let m =
+                    query
+                      {
+                        for m in t.GetMethods() do
+                        where ((m.Name = "Invoke") && (m.DeclaringType = t))
+                        exactlyOne
+                      }
+                new DiscoveryResult(name, t.FullName, m.Name))
+            |> Array.ofSeq
 
 [<FileExtension(".dll")>]
 [<FileExtension(".exe")>]
@@ -83,9 +94,10 @@ type Discoverer() =
              logger: IMessageLogger,
              discoverySink: ITestCaseDiscoverySink): unit =
             try
+                let vsCallback = new VsCallbackProxy(logger)
                 for assemblyPath in (sourcesUsingFuchu sources) do
                     use host = new TestAssemblyHost(assemblyPath)
-                    let discoverProxy = host.CreateInAppdomain<DiscoverProxy>()
+                    let discoverProxy = host.CreateInAppdomain<DiscoverProxy>([|vsCallback|])
                     let testList = discoverProxy.DiscoverTests(assemblyPath)
                     let locationFinder = new SourceLocationFinder(assemblyPath)
                     for { TestCode = code; TypeName = typeName; MethodName = methodName } in testList do

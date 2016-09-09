@@ -4,6 +4,7 @@
 
 # Avoid potential misdetection of some common file types
 *.cs text
+*.fs text
 *.csproj text
 *.Config text
 *.config text

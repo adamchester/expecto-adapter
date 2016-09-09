@@ -18,19 +18,17 @@ open System.Security.Permissions
 open Filters
 open RemotingHelpers
 
-type VsCallbackProxy(log: ITestExecutionRecorder, assemblyPath: string) =
+type VsCallbackProxy(executionRecorder: ITestExecutionRecorder, assemblyPath: string) =
     inherit MarshalByRefObjectInfiniteLease()
 
     member this.LogInfo (message:string) =
-        log.SendMessage(TestMessageLevel.Informational, message)
+        executionRecorder.SendMessage(TestMessageLevel.Informational, message)
 
     member this.CaseStarted(name: string) =
-        log.SendMessage(TestMessageLevel.Informational, "CaseStarted: " + name)
         let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
-        log.RecordStart(testCase)
+        executionRecorder.RecordStart(testCase)
 
     member this.CasePassed(name: string, duration: TimeSpan) =
-        log.SendMessage(TestMessageLevel.Informational, "CasePassed: " + name)
         let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
         let result =
             new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
@@ -39,11 +37,10 @@ type VsCallbackProxy(log: ITestExecutionRecorder, assemblyPath: string) =
                  Outcome = TestOutcome.Passed,
                  Duration = duration,
                  ComputerName = Environment.MachineName)
-        log.RecordResult(result)
-        log.RecordEnd(testCase, TestOutcome.Passed)
+        executionRecorder.RecordResult(result)
+        executionRecorder.RecordEnd(testCase, TestOutcome.Passed)
 
     member this.CaseFailed(name: string, message: string, stackTrace: string, duration: TimeSpan) =
-        log.SendMessage(TestMessageLevel.Informational, "CaseFailed: " + name)
         let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
         let result =
             new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
@@ -54,11 +51,10 @@ type VsCallbackProxy(log: ITestExecutionRecorder, assemblyPath: string) =
                  Outcome = TestOutcome.Failed,
                  Duration = duration,
                  ComputerName = Environment.MachineName)
-        log.RecordResult(result)
-        log.RecordEnd(testCase, TestOutcome.Failed)
+        executionRecorder.RecordResult(result)
+        executionRecorder.RecordEnd(testCase, TestOutcome.Failed)
 
     member this.CaseSkipped(name: string, message: string) =
-        log.SendMessage(TestMessageLevel.Informational, "CaseSkipped: " + name)
         let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
         let result =
             new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
@@ -67,17 +63,17 @@ type VsCallbackProxy(log: ITestExecutionRecorder, assemblyPath: string) =
                  ErrorMessage = message,
                  Outcome = TestOutcome.Skipped,
                  ComputerName = Environment.MachineName)
-        log.RecordResult(result)
-        log.RecordEnd(testCase, TestOutcome.Skipped)
+        executionRecorder.RecordResult(result)
+        executionRecorder.RecordEnd(testCase, TestOutcome.Skipped)
 
 
 type ExecuteProxy(vsCallback: VsCallbackProxy, assemblyPath: string, testsToInclude: string[]) =
     inherit MarshalByRefObjectInfiniteLease()
     member this.ExecuteTests() =
         if testsToInclude = null then
-            vsCallback.LogInfo(sprintf "ExecuteProxy.ExecuteTests: %s, all tests" assemblyPath)
+            vsCallback.LogInfo(sprintf "Executing all tests in %s" assemblyPath)
         else
-            vsCallback.LogInfo(sprintf "ExecuteProxy.ExecuteTests: %s, %d tests (%s)" assemblyPath testsToInclude.Length (String.Join(",", testsToInclude)))
+            vsCallback.LogInfo(sprintf "Executing tests from: %s. %d tests (%s)" assemblyPath testsToInclude.Length (String.Join(",", testsToInclude)))
 
         // Fuchu invokes callbacks regarding test execution to what it
         //
@@ -90,25 +86,28 @@ type ExecuteProxy(vsCallback: VsCallbackProxy, assemblyPath: string, testsToIncl
                 Exception = (fun name ex duration -> vsCallback.CaseFailed(name, ex.Message, ex.StackTrace, duration))
             }
         let asm = Assembly.LoadFrom(assemblyPath)
-        let tests =
-            match testFromAssembly (asm) with
-            | Some t -> t
-            | None -> TestList []
-        let testList =
-            let allTests = Fuchu.Test.toTestCodeList tests
-            vsCallback.LogInfo(sprintf "All tests: %d" (allTests.Count()))
-            if testsToInclude = null then
-                allTests
-            else
-                let requiredTests = testsToInclude |> HashSet
-                allTests
-                |> Seq.filter (fun (name, _) -> requiredTests.Contains(name))
-        vsCallback.LogInfo(sprintf "Number of tests included: %d" (testList.Count()))
-        let pmap (f: _ -> _) (s: _ seq) = s.AsParallel().Select(f) :> _ seq
-        evalTestList testPrinters pmap testList
-        //evalTestList testPrinters Seq.map testList
-        |> Seq.toList   // Force evaluation
-        |> ignore
+        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Fuchu")) then
+            vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Fuchu" assemblyPath)
+        else            
+            let tests =
+                match testFromAssembly (asm) with
+                | Some t -> t
+                | None -> TestList []
+            let testList =
+                let allTests = Fuchu.Test.toTestCodeList tests
+                vsCallback.LogInfo(sprintf "All tests: %d" (allTests.Count()))
+                if testsToInclude = null then
+                    allTests
+                else
+                    let requiredTests = testsToInclude |> HashSet
+                    allTests
+                    |> Seq.filter (fun (name, _) -> requiredTests.Contains(name))
+            vsCallback.LogInfo(sprintf "Number of tests included: %d" (testList.Count()))
+            let pmap (f: _ -> _) (s: _ seq) = s.AsParallel().Select(f) :> _ seq
+            evalTestList testPrinters pmap testList
+            //evalTestList testPrinters Seq.map testList
+            |> Seq.toList   // Force evaluation
+            |> ignore
 
 type AssemblyExecutor(vsCallback: VsCallbackProxy, assemblyPath: string, testsToInclude: string[]) =
     let host = new TestAssemblyHost(assemblyPath)
