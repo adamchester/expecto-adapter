@@ -2,7 +2,7 @@
 
 open System
 open System.Collections.Generic
-open System.IO
+open System.Diagnostics
 open System.Linq
 open System.Reflection
 
@@ -168,7 +168,7 @@ type FuchuTestExecutor() =
             | x -> (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Error, x.ToString())
                 
         member x.RunTests(sources: IEnumerable<string>, runContext: IRunContext, frameworkHandle: IFrameworkHandle): unit =
-            (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, "Running all tests")
+            (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, sprintf "Running all tests (%s)" (FileVersionInfo.GetVersionInfo(typeof<FuchuTestExecutor>.Assembly.Location).FileVersion))
             try
                 executors <-
                     sourcesUsingFuchu sources
