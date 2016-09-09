@@ -24,13 +24,13 @@ type DiscoveryResult =
             { TestCode = testCode; TypeName = typeName; MethodName = methodName }
     end
 
-type VsCallbackProxy(log: IMessageLogger) =
+type VsDiscoverCallbackProxy(log: IMessageLogger) =
     inherit MarshalByRefObjectInfiniteLease()
 
     member this.LogInfo (message:string) =
         log.SendMessage(TestMessageLevel.Informational, message)
 
-type DiscoverProxy(vsCallback:VsCallbackProxy) =
+type DiscoverProxy(vsCallback:VsDiscoverCallbackProxy) =
     inherit MarshalByRefObjectInfiniteLease()
 
     let isFsharpFuncType t =
@@ -94,7 +94,7 @@ type Discoverer() =
              logger: IMessageLogger,
              discoverySink: ITestCaseDiscoverySink): unit =
             try
-                let vsCallback = new VsCallbackProxy(logger)
+                let vsCallback = new VsDiscoverCallbackProxy(logger)
                 for assemblyPath in (sourcesUsingFuchu sources) do
                     use host = new TestAssemblyHost(assemblyPath)
                     let discoverProxy = host.CreateInAppdomain<DiscoverProxy>([|vsCallback|])
