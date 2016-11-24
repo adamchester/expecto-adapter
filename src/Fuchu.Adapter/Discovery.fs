@@ -26,12 +26,17 @@ type DiscoveryResult =
 
 type VsDiscoverCallbackProxy(log: IMessageLogger) =
     inherit MarshalByRefObjectInfiniteLease()
+    interface IObserver<string> with
+        member this.OnCompleted(): unit = 
+            ()
+        member x.OnError(error: exn): unit = 
+            log.SendMessage(TestMessageLevel.Error, error.ToString())
+        member x.OnNext(message: string): unit = 
+            log.SendMessage(TestMessageLevel.Informational, message)
 
-    member this.LogInfo (message:string) =
-        log.SendMessage(TestMessageLevel.Informational, message)
-
-type DiscoverProxy(vsCallback:VsDiscoverCallbackProxy) =
+type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
     inherit MarshalByRefObjectInfiniteLease()
+    let observer = proxyHandler.Item1
 
     let isFsharpFuncType t =
         let baseType =
@@ -63,7 +68,7 @@ type DiscoverProxy(vsCallback:VsDiscoverCallbackProxy) =
     member this.DiscoverTests(source: string) =
         let asm = Assembly.LoadFrom(source)
         if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Fuchu")) then
-            vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Fuchu" source)
+            observer.OnNext(sprintf "Skipping: %s because it does not reference Fuchu" source)
             Array.empty
         else            
             let tests =
@@ -97,7 +102,7 @@ type Discoverer() =
                 let vsCallback = new VsDiscoverCallbackProxy(logger)
                 for assemblyPath in (sourcesUsingFuchu sources) do
                     use host = new TestAssemblyHost(assemblyPath)
-                    let discoverProxy = host.CreateInAppdomain<DiscoverProxy>([|vsCallback|])
+                    let discoverProxy = host.CreateInAppdomain<DiscoverProxy>([|Tuple.Create<IObserver<string>>(vsCallback)|])
                     let testList = discoverProxy.DiscoverTests(assemblyPath)
                     let locationFinder = new SourceLocationFinder(assemblyPath)
                     for { TestCode = code; TypeName = typeName; MethodName = methodName } in testList do

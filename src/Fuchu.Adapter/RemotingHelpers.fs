@@ -6,6 +6,7 @@ open System.Runtime.Remoting
 open System.Reflection
 open System.Security
 open System.Security.Permissions
+open System.Security.Policy
 
 
 /// <summary>
@@ -40,28 +41,6 @@ type MarshalByRefObjectInfiniteLease() =
 /// assembly's location to ensure that assemblies are resolved correctly.
 /// </remarks>
 type TestAssemblyHost(source) =
-    // In some circumstances, our appdomain seems to end up being unable to resolve this assembly.
-    // So I've used the technique Rick Strahl describes in
-    //  https://weblog.west-wind.com/posts/2009/Jan/19/Assembly-Loading-across-AppDomains
-    // It's not clear why this is necessary - it seems the Assembly.Load we try as a first resort
-    // works, so you'd think it would just work without custom resolution logic. But there we are.
-    static do
-        let CurrentDomain_AssemblyResolve =
-            fun (sender:obj) (args:ResolveEventArgs) ->
-                let assembly = 
-                    try
-                        System.Reflection.Assembly.Load(args.Name);
-                    with
-                    | _ -> null // ignore load error
-                if assembly <> null then
-                    assembly
-                else
-                    let parts = args.Name.Split(',')
-                    let file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + parts.[0].Trim() + ".dll"
-                    Printf.printf "Normal resolution failed. Trying %s\n" file
-                    System.Reflection.Assembly.LoadFrom(file)
-        AppDomain.CurrentDomain.add_AssemblyResolve(new ResolveEventHandler(CurrentDomain_AssemblyResolve))
-
     let mutable appDomain =
         let setup =
             let assemblyFullPath = Path.GetFullPath(source)
@@ -74,7 +53,9 @@ type TestAssemblyHost(source) =
                 (ApplicationBase = Path.GetDirectoryName(assemblyFullPath),
                  ApplicationName = Guid.NewGuid().ToString(),
                  ConfigurationFile = configFullPath)
-        AppDomain.CreateDomain(setup.ApplicationName, null, setup, new PermissionSet(PermissionState.Unrestricted))
+        let current = AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName
+        let evidence = new Evidence(AppDomain.CurrentDomain.Evidence)
+        AppDomain.CreateDomain(setup.ApplicationName, evidence, setup)
 
     interface IDisposable with
         member this.Dispose() =
@@ -86,16 +67,18 @@ type TestAssemblyHost(source) =
     /// Create an instance of the specified type in the test AppDomain.
     /// </summary>
     member this.CreateInAppdomain<'P when 'P :> MarshalByRefObject and 'P : (new : unit -> 'P)>() =
-        appDomain.CreateInstanceAndUnwrap((typeof<'P>).Assembly.FullName, typeof<'P>.FullName) :?> 'P
+        appDomain.CreateInstanceFromAndUnwrap((typeof<'P>).Assembly.Location, typeof<'P>.FullName) :?> 'P
 
     /// <summary>
     /// Create an instance of the specified type in the test AppDomain, using the
     /// constructor arguments supplied.
     /// </summary>
     member this.CreateInAppdomain<'P when 'P :> MarshalByRefObject>(args:obj []) =
-        appDomain.CreateInstanceAndUnwrap(
-            (typeof<'P>).Assembly.FullName,
-            typeof<'P>.FullName,
+        let t = typeof<'P>
+        let asm = t.Assembly
+        appDomain.CreateInstanceFromAndUnwrap(
+            asm.Location,
+            t.FullName,
             false,
             BindingFlags.Default,
             null,

@@ -10,65 +10,110 @@ open Microsoft.VisualStudio.TestPlatform.ObjectModel
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging
 
+open Newtonsoft.Json
+
 open Fuchu
 open Fuchu.Impl
-open System.Security
-open System.Security.Permissions
 
 open Filters
 open RemotingHelpers
 
-type VsCallbackProxy(executionRecorder: ITestExecutionRecorder, assemblyPath: string) =
+        
+type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:string) =
+    inherit MarshalByRefObjectInfiniteLease()
+    interface IObserver<string * string> with
+        member this.OnCompleted(): unit = 
+            ()
+        member x.OnError(error: exn): unit = 
+            recorder.SendMessage(TestMessageLevel.Error, error.ToString())
+        member x.OnNext((messageType, message): string * string): unit = 
+            match messageType with
+            | "LogInfo" -> recorder.SendMessage(TestMessageLevel.Informational, message)
+            | "CaseStarted" ->
+                let testCase = new TestCase(message, Ids.ExecutorUri, assemblyPath)
+                recorder.RecordStart(testCase)
+            | "CasePassed" ->
+                let d = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)
+                let name = d.["name"]
+                let duration = TimeSpan.ParseExact(d.["duration"], "c", System.Globalization.CultureInfo.InvariantCulture)
+                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let result =
+                    new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
+                        (testCase,
+                         DisplayName = name,
+                         Outcome = TestOutcome.Passed,
+                         Duration = duration,
+                         ComputerName = Environment.MachineName)
+                recorder.RecordResult(result)
+                recorder.RecordEnd(testCase, result.Outcome)
+            | "CaseFailed" ->
+                let d = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)
+                let name = d.["name"]
+                let message = d.["message"]
+                let stackTrace = d.["stackTrace"]
+                let duration = TimeSpan.ParseExact(d.["duration"], "c", System.Globalization.CultureInfo.InvariantCulture)
+                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let result =
+                    new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
+                        (testCase,
+                         DisplayName = name,
+                         ErrorMessage = message,
+                         ErrorStackTrace = stackTrace,
+                         Outcome = TestOutcome.Failed,
+                         Duration = duration,
+                         ComputerName = Environment.MachineName)
+                recorder.RecordResult(result)
+                recorder.RecordEnd(testCase, result.Outcome)
+            | "CaseSkipped" ->
+                let d = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)
+                let name = d.["name"]
+                let message = d.["message"]
+                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let result =
+                    new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
+                        (testCase,
+                         DisplayName = name,
+                         ErrorMessage = message,
+                         Outcome = TestOutcome.Skipped,
+                         ComputerName = Environment.MachineName)
+                recorder.RecordResult(result)
+                recorder.RecordEnd(testCase, result.Outcome)
+            | _ -> recorder.SendMessage(TestMessageLevel.Error, Printf.sprintf "Fuchu.Adapter internal error - recorder proxy received unknown message type: %s" messageType)
+        
+
+type VsCallbackForwarder(observer: IObserver<string * string>, assemblyPath: string) =
     inherit MarshalByRefObjectInfiniteLease()
 
+    let testEnded (messageType, values: (string*string) list) =
+        let textStream = new System.IO.MemoryStream()
+        let d = values.ToDictionary((fun (k, _) -> k), (fun (_, v) -> v))
+        let text = JsonConvert.SerializeObject(d)
+        observer.OnNext((messageType, text))
+        
     member this.LogInfo (message:string) =
-        executionRecorder.SendMessage(TestMessageLevel.Informational, message)
+        observer.OnNext(("LogInfo", message))
 
     member this.CaseStarted(name: string) =
-        let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
-        executionRecorder.RecordStart(testCase)
+        observer.OnNext("CaseStarted", name)
 
     member this.CasePassed(name: string, duration: TimeSpan) =
-        let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
-        let result =
-            new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
-                (testCase,
-                 DisplayName = name,
-                 Outcome = TestOutcome.Passed,
-                 Duration = duration,
-                 ComputerName = Environment.MachineName)
-        executionRecorder.RecordResult(result)
-        executionRecorder.RecordEnd(testCase, TestOutcome.Passed)
+        testEnded ("CasePassed", ["name", name; "duration", duration.ToString("c")])
 
     member this.CaseFailed(name: string, message: string, stackTrace: string, duration: TimeSpan) =
-        let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
-        let result =
-            new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
-                (testCase,
-                 DisplayName = name,
-                 ErrorMessage = message,
-                 ErrorStackTrace = stackTrace,
-                 Outcome = TestOutcome.Failed,
-                 Duration = duration,
-                 ComputerName = Environment.MachineName)
-        executionRecorder.RecordResult(result)
-        executionRecorder.RecordEnd(testCase, TestOutcome.Failed)
+        testEnded ("CaseFailed", ["name", name; "message", message; "stackTrace", stackTrace; "duration", duration.ToString("c")])
 
     member this.CaseSkipped(name: string, message: string) =
-        let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
-        let result =
-            new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
-                (testCase,
-                 DisplayName = name,
-                 ErrorMessage = message,
-                 Outcome = TestOutcome.Skipped,
-                 ComputerName = Environment.MachineName)
-        executionRecorder.RecordResult(result)
-        executionRecorder.RecordEnd(testCase, TestOutcome.Skipped)
+        testEnded ("CaseSkipped", ["name", name; "message", message])
 
 
-type ExecuteProxy(vsCallback: VsCallbackProxy, assemblyPath: string, testsToInclude: string[]) =
+// The curious 1-tuple argument here is so that we can force the AppDomain class to locate the correct
+// constructor. It enables us to pass in an argument that is unambiguously typed as the required
+// interface. (Otherwise, it ends up being of type TestExecutionRecorderProxy, and the dynamic
+// creation attempt seems not to be able to work out that it needs the constructor that takes an
+// IObserver<string*string>)
+type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath: string, testsToInclude: string[]) =
     inherit MarshalByRefObjectInfiniteLease()
+    let vsCallback: VsCallbackForwarder = new VsCallbackForwarder(proxyHandler.Item1, assemblyPath)
     member this.ExecuteTests() =
         if testsToInclude = null then
             vsCallback.LogInfo(sprintf "Executing all tests in %s" assemblyPath)
@@ -109,14 +154,15 @@ type ExecuteProxy(vsCallback: VsCallbackProxy, assemblyPath: string, testsToIncl
             |> Seq.toList   // Force evaluation
             |> ignore
 
-type AssemblyExecutor(vsCallback: VsCallbackProxy, assemblyPath: string, testsToInclude: string[]) =
+type AssemblyExecutor(proxyHandler: IObserver<string * string>, assemblyPath: string, testsToInclude: string[]) =
     let host = new TestAssemblyHost(assemblyPath)
-    let proxy = host.CreateInAppdomain<ExecuteProxy>([|vsCallback; assemblyPath; testsToInclude|])
+    let wrappedArg: Tuple<IObserver<string*string>> = Tuple.Create(proxyHandler)
+    let proxy = host.CreateInAppdomain<ExecuteProxy>([|wrappedArg; assemblyPath; testsToInclude|])
     interface IDisposable with
         member this.Dispose() =
             (host :> IDisposable).Dispose()
     member this.ExecuteTests() =
-        vsCallback.LogInfo ("Executing tests in assembly " + assemblyPath)
+        proxyHandler.OnNext("LogInfo", "Executing tests in assembly " + assemblyPath)
         proxy.ExecuteTests()
 
 
@@ -152,7 +198,7 @@ type FuchuTestExecutor() =
                     |> Seq.map
                         (fun testGroup ->
                             let assemblyPath = testGroup.Key
-                            let callbackProxy = new VsCallbackProxy(frameworkHandle, assemblyPath)
+                            let callbackProxy:IObserver<string*string> = new TestExecutionRecorderProxy(frameworkHandle, assemblyPath) :> IObserver<string*string>
                             let testNames =
                                 query
                                   {
@@ -166,7 +212,7 @@ type FuchuTestExecutor() =
                 runAllExecutors ()
             with
             | x -> (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Error, x.ToString())
-                
+
         member x.RunTests(sources: IEnumerable<string>, runContext: IRunContext, frameworkHandle: IFrameworkHandle): unit =
             (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, sprintf "Running all tests (%s)" (FileVersionInfo.GetVersionInfo(typeof<FuchuTestExecutor>.Assembly.Location).FileVersion))
             try
@@ -174,7 +220,7 @@ type FuchuTestExecutor() =
                     sourcesUsingFuchu sources
                     |> Seq.map
                         (fun assemblyPath ->
-                            let callbackProxy = new VsCallbackProxy(frameworkHandle, assemblyPath)
+                            let callbackProxy:IObserver<string*string> = new TestExecutionRecorderProxy(frameworkHandle, assemblyPath) :> IObserver<string*string>
                             (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, ("Creating test host for " + assemblyPath))
                             new AssemblyExecutor(callbackProxy, assemblyPath, null))
                     |> Array.ofSeq
