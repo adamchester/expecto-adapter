@@ -8,7 +8,7 @@
     <ProjectGuid>e0e2673b-41fd-4131-b7ce-50ef315dea64</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Library1</RootNamespace>
-    <AssemblyName>ConsoleApp1</AssemblyName>
+    <AssemblyName>Expecto.Vstest.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -25,8 +25,9 @@
     <DocumentationFile>bin\Debug\Library1.XML</DocumentationFile>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
-    <StartWorkingDirectory>C:\My\repo\expecto-adapter\src\Expecto.Vstest.Console\bin\Debug\</StartWorkingDirectory>
-    <StartArguments>ConsoleApp1.exe /testadapterpath:C:\My\repo\expecto-adapter\src\Expecto.Vstest.Console\bin\Debug\</StartArguments>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
+    <StartArguments>Expecto.Vstest.Console.exe /testadapterpath:.</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +36,11 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\Library1.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\ConsoleApp1.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <StartArguments>"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" "Expecto.Vstest.Console.dll" /TestAdapterPath:"."</StartArguments>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -57,6 +62,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Program.fs" />
     <Content Include="packages.config" />
+    <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Argu">
