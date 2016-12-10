@@ -1,4 +1,4 @@
-namespace Fuchu.Adapter.AssemblyInfo
+namespace Expecto.VisualStudio.TestAdapter.AssemblyInfo
 
 open System.Reflection
 //open System.Runtime.CompilerServices
@@ -11,7 +11,7 @@ open System.Reflection
 #endif
 
 [<assembly: AssemblyCompany("Interact Software Ltd.")>]
-[<assembly: AssemblyProduct("Flyntax")>]
+[<assembly: AssemblyProduct("Expecto.VisualStudio.TestAdapter")>]
 [<assembly: AssemblyCopyright("Copyright © 2016 Ian Griffiths")>]
 [<assembly: AssemblyTrademark("")>]
 

@@ -6,7 +6,7 @@ Param(
 $apiBaseUrl = "https://api.github.com"
 $base64Token = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($Auth))
 
-$createReleaseUrl = $apiBaseUrl + "/repos/interactsw/fuchu-adapter/releases"
+$createReleaseUrl = $apiBaseUrl + "/repos/adamchester/expecto-visualstudio-adapter/releases"
 
 $body = @{
   tag_name = $Tag

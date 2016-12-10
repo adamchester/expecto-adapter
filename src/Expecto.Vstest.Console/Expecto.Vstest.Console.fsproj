@@ -5,15 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>1f583d48-8771-45b4-9793-60a69db06c61</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Fuchu.Adapter</RootNamespace>
-    <AssemblyName>Fuchu.VisualStudio.TestAdapter</AssemblyName>
+    <ProjectGuid>e0e2673b-41fd-4131-b7ce-50ef315dea64</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Library1</RootNamespace>
+    <AssemblyName>ConsoleApp1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
+    <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>Fuchu.VisualStudio.TestAdapter</Name>
-    <TargetFrameworkProfile />
+    <Name>Expecto.Vstest.Console</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +22,11 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\Fuchu.Adapter.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Library1.XML</DocumentationFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
+    <StartWorkingDirectory>C:\My\repo\expecto-adapter\src\Expecto.Vstest.Console\bin\Debug\</StartWorkingDirectory>
+    <StartArguments>ConsoleApp1.exe /testadapterpath:C:\My\repo\expecto-adapter\src\Expecto.Vstest.Console\bin\Debug\</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +35,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\Fuchu.Adapter.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Library1.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -51,55 +54,34 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.fs">
-      <Link>CommonAssemblyInfo.fs</Link>
-    </Compile>
-    <Compile Include="Ids.fs" />
-    <Compile Include="RemotingHelpers.fs" />
-    <Compile Include="Filters.fs" />
-    <Compile Include="SourceLocation.fs" />
-    <Compile Include="Discovery.fs" />
-    <Compile Include="Execution.fs" />
-    <None Include="Script.fsx" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Program.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Argu">
+      <HintPath>..\packages\Argu.3.2.0\lib\net40\Argu.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Expecto">
+      <HintPath>..\packages\Expecto.1.1.2\lib\net40\Expecto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.1.2.1\lib\net40\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Fuchu">
-      <HintPath>..\packages\Fuchu.1.0.3.0\lib\Fuchu.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\Microsoft.VisualStudio.TestPlatform.ObjectModel.0.0.1\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
+      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj">
+      <Name>Expecto.VisualStudio.TestAdapter</Name>
+      <Project>{1f583d48-8771-45b4-9793-60a69db06c61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,8 +8,8 @@ open Microsoft.VisualStudio.TestPlatform.ObjectModel
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging
 
-open Fuchu
-open Fuchu.Impl
+open Expecto
+open Expecto.Impl
 
 open Filters
 open RemotingHelpers
@@ -67,15 +67,15 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
 
     member this.DiscoverTests(source: string) =
         let asm = Assembly.LoadFrom(source)
-        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Fuchu")) then
-            observer.OnNext(sprintf "Skipping: %s because it does not reference Fuchu" source)
+        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Expecto")) then
+            observer.OnNext(sprintf "Skipping: %s because it does not reference Expecto" source)
             Array.empty
         else            
             let tests =
                 match testFromAssembly (asm) with
                 | Some t -> t
                 | None -> TestList []
-            Fuchu.Test.toTestCodeList tests
+            Expecto.Test.toTestCodeList tests
             |> Seq.map (fun (name, testFunc) ->
                 let t = getFuncTypeToUse testFunc asm
                 let m =
@@ -100,7 +100,7 @@ type Discoverer() =
              discoverySink: ITestCaseDiscoverySink): unit =
             try
                 let vsCallback = new VsDiscoverCallbackProxy(logger)
-                for assemblyPath in (sourcesUsingFuchu sources) do
+                for assemblyPath in (sourcesUsingExpecto sources) do
                     use host = new TestAssemblyHost(assemblyPath)
                     let discoverProxy = host.CreateInAppdomain<DiscoverProxy>([|Tuple.Create<IObserver<string>>(vsCallback)|])
                     let testList = discoverProxy.DiscoverTests(assemblyPath)

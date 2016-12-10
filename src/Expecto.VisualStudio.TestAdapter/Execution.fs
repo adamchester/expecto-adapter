@@ -12,8 +12,8 @@ open Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging
 
 open Newtonsoft.Json
 
-open Fuchu
-open Fuchu.Impl
+open Expecto
+open Expecto.Impl
 
 open Filters
 open RemotingHelpers
@@ -78,7 +78,7 @@ type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:st
                          ComputerName = Environment.MachineName)
                 recorder.RecordResult(result)
                 recorder.RecordEnd(testCase, result.Outcome)
-            | _ -> recorder.SendMessage(TestMessageLevel.Error, Printf.sprintf "Fuchu.Adapter internal error - recorder proxy received unknown message type: %s" messageType)
+            | _ -> recorder.SendMessage(TestMessageLevel.Error, Printf.sprintf "Expecto.VisualStudio.TestAdapter internal error - recorder proxy received unknown message type: %s" messageType)
         
 
 type VsCallbackForwarder(observer: IObserver<string * string>, assemblyPath: string) =
@@ -120,26 +120,27 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
         else
             vsCallback.LogInfo(sprintf "Executing tests from: %s. %d tests (%s)" assemblyPath testsToInclude.Length (String.Join(",", testsToInclude)))
 
-        // Fuchu invokes callbacks regarding test execution to what it
-        //
+        // Expecto invokes callbacks regarding test execution to what it
         let testPrinters =
             {
-                BeforeRun = vsCallback.CaseStarted
-                Passed = (fun name duration -> vsCallback.CasePassed(name, duration))
-                Ignored = (fun name message -> vsCallback.CaseSkipped(name, message))
-                Failed = (fun name message duration -> vsCallback.CaseFailed(name, message, null, duration))
-                Exception = (fun name ex duration -> vsCallback.CaseFailed(name, ex.Message, ex.StackTrace, duration))
+                beforeRun = (fun test -> vsCallback.CaseStarted (test.ToString()))
+                beforeEach = (fun name -> vsCallback.LogInfo(sprintf "starting '%s'" name))
+                summary = (fun results -> vsCallback.LogInfo(sprintf "summary %A" results))
+                passed = (fun name duration -> vsCallback.CasePassed(name, duration))
+                ignored = (fun name message -> vsCallback.CaseSkipped(name, message))
+                failed = (fun name message duration -> vsCallback.CaseFailed(name, message, null, duration))
+                exn = (fun name ex duration -> vsCallback.CaseFailed(name, ex.Message, ex.StackTrace, duration))
             }
         let asm = Assembly.LoadFrom(assemblyPath)
-        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Fuchu")) then
-            vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Fuchu" assemblyPath)
+        if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Expecto")) then
+            vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Expecto" assemblyPath)
         else            
             let tests =
                 match testFromAssembly (asm) with
                 | Some t -> t
                 | None -> TestList []
             let testList =
-                let allTests = Fuchu.Test.toTestCodeList tests
+                let allTests = Expecto.Test.toTestCodeList tests
                 vsCallback.LogInfo(sprintf "All tests: %d" (allTests.Count()))
                 if testsToInclude = null then
                     allTests
@@ -165,9 +166,8 @@ type AssemblyExecutor(proxyHandler: IObserver<string * string>, assemblyPath: st
         proxyHandler.OnNext("LogInfo", "Executing tests in assembly " + assemblyPath)
         proxy.ExecuteTests()
 
-
 [<ExtensionUri(Ids.ExecutorId)>]
-type FuchuTestExecutor() =
+type ExpectoTestExecutor() =
     let mutable (executors:AssemblyExecutor []) = null
 
     let runAllExecutors () =
@@ -214,10 +214,10 @@ type FuchuTestExecutor() =
             | x -> (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Error, x.ToString())
 
         member x.RunTests(sources: IEnumerable<string>, runContext: IRunContext, frameworkHandle: IFrameworkHandle): unit =
-            (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, sprintf "Running all tests (%s)" (FileVersionInfo.GetVersionInfo(typeof<FuchuTestExecutor>.Assembly.Location).FileVersion))
+            (frameworkHandle :> ITestExecutionRecorder).SendMessage(Logging.TestMessageLevel.Informational, sprintf "Running all tests (%s)" (FileVersionInfo.GetVersionInfo(typeof<ExpectoTestExecutor>.Assembly.Location).FileVersion))
             try
                 executors <-
-                    sourcesUsingFuchu sources
+                    sourcesUsingExpecto sources
                     |> Seq.map
                         (fun assemblyPath ->
                             let callbackProxy:IObserver<string*string> = new TestExecutionRecorderProxy(frameworkHandle, assemblyPath) :> IObserver<string*string>

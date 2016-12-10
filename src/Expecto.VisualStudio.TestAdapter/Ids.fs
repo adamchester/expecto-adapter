@@ -2,5 +2,5 @@
 
 
 [<Literal>]
-let ExecutorId = "executor://Fuchu.VisualStudio"
+let ExecutorId = "executor://Expecto.VisualStudio.TestAdapter"
 let ExecutorUri = new System.Uri(ExecutorId)

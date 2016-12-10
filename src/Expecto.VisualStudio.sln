@@ -5,12 +5,12 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7777BB6E-4803-4898-8C82-A7897417B0E6}"
 	ProjectSection(SolutionItems) = preProject
-		Fuchu.Adapter\Fuchu.Adapter.nuspec = Fuchu.Adapter\Fuchu.Adapter.nuspec
 		NuGet.Config = NuGet.Config
-		..\scripts\build\SetBuildVersion.ps1 = ..\scripts\build\SetBuildVersion.ps1
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Fuchu.VisualStudio.TestAdapter", "Fuchu.Adapter\Fuchu.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.VisualStudio.TestAdapter", "Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.Vstest.Console", "Expecto.Vstest.Console\Expecto.Vstest.Console.fsproj", "{E0E2673B-41FD-4131-B7CE-50EF315DEA64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +22,10 @@ Global
 		{1F583D48-8771-45B4-9793-60A69DB06C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F583D48-8771-45B4-9793-60A69DB06C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F583D48-8771-45B4-9793-60A69DB06C61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
