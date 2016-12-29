@@ -138,7 +138,7 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
             let tests =
                 match testFromAssembly (asm) with
                 | Some t -> t
-                | None -> TestList []
+                | None -> TestList ([], Normal)
             let testList =
                 let allTests = Expecto.Test.toTestCodeList tests
                 vsCallback.LogInfo(sprintf "All tests: %d" (allTests.Count()))
@@ -147,7 +147,7 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
                 else
                     let requiredTests = testsToInclude |> HashSet
                     allTests
-                    |> Seq.filter (fun (name, _) -> requiredTests.Contains(name))
+                    |> Seq.filter (fun (name, _, _) -> requiredTests.Contains(name))
             vsCallback.LogInfo(sprintf "Number of tests included: %d" (testList.Count()))
             let pmap (f: _ -> _) (s: _ seq) = s.AsParallel().Select(f) :> _ seq
             evalTestList testPrinters pmap testList

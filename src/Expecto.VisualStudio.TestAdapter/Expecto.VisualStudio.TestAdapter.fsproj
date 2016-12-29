@@ -68,7 +68,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Expecto">
-      <HintPath>..\packages\Expecto.1.1.2\lib\net40\Expecto.dll</HintPath>
+      <HintPath>..\packages\Expecto.2.3.0\lib\net40\Expecto.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Core">
@@ -76,7 +76,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\Microsoft.VisualStudio.TestPlatform.ObjectModel.0.0.1\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
