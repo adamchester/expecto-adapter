@@ -1,0 +1,1 @@
+"%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" "src\Expecto.Vstest.Console\bin\Release\Expecto.Vstest.Console.exe" "/testadapterpath:src\Expecto.Vstest.Console\bin\Release\"

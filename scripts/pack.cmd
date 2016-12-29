@@ -1,0 +1,1 @@
+nuget pack src\Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.nuspec
