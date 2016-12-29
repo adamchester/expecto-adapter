@@ -74,9 +74,9 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
             let tests =
                 match testFromAssembly (asm) with
                 | Some t -> t
-                | None -> TestList []
+                | None -> TestList ([], Normal)
             Expecto.Test.toTestCodeList tests
-            |> Seq.map (fun (name, testFunc) ->
+            |> Seq.map (fun (name, testFunc, state) ->
                 let t = getFuncTypeToUse testFunc asm
                 let m =
                     query

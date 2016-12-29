@@ -70,7 +70,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Expecto">
-      <HintPath>..\packages\Expecto.1.1.2\lib\net40\Expecto.dll</HintPath>
+      <HintPath>..\packages\Expecto.2.3.0\lib\net40\Expecto.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Core">
