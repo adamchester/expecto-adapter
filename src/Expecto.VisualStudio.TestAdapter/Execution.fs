@@ -144,13 +144,17 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
             
             vsCallback.LogInfo(sprintf "All tests: %d" (testList.Count()))
 
-            let includedTestNames = (testsToInclude |> HashSet)
+            let includedInCurrentTests testName = 
+                match testsToInclude with
+                | null -> true
+                | _ -> testsToInclude.Contains(testName)
             
             let testsToRun = match testsToInclude with
                              | null -> tests
-                             | _ -> tests |> Expecto.Test.filter (fun testName -> includedTestNames.Contains(testName))
-            
-            vsCallback.LogInfo(sprintf "Number of tests included: %d" ((testList |> List.filter (fun tc -> includedTestNames.Contains(tc.name))).Count()))
+                             | _ -> tests |> Expecto.Test.filter includedInCurrentTests
+           
+
+            vsCallback.LogInfo(sprintf "Number of tests included: %d" ((testList |> List.map (fun ft -> ft.name) |> List.filter includedInCurrentTests).Count()))
             
             let conf = { defaultConfig with printer = testPrinters }
             evalPar conf testsToRun |> ignore
