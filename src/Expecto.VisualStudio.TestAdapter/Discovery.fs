@@ -54,7 +54,9 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
     // might be able to find corresponding source code) is referred to in a field
     // of the function object.
     let getFuncTypeToUse (testFunc:TestCode) (asm:Assembly) =
-        let t = testFunc.GetType()
+        let t = match testFunc with
+                | Sync tc -> tc.GetType() 
+                | Async tc -> tc.GetType()
         if t.Assembly.FullName = asm.FullName then
             t
         else
@@ -76,8 +78,8 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
                 | Some t -> t
                 | None -> TestList ([], Normal)
             Expecto.Test.toTestCodeList tests
-            |> Seq.map (fun (name, testFunc, state) ->
-                let t = getFuncTypeToUse testFunc asm
+            |> Seq.map (fun flatTest ->
+                let t = getFuncTypeToUse flatTest.test asm
                 let m =
                     query
                       {
@@ -85,7 +87,7 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
                         where ((m.Name = "Invoke") && (m.DeclaringType = t))
                         exactlyOne
                       }
-                new DiscoveryResult(name, t.FullName, m.Name))
+                new DiscoveryResult(flatTest.name, t.FullName, m.Name))
             |> Array.ofSeq
 
 [<FileExtension(".dll")>]

@@ -123,37 +123,41 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
         // Expecto invokes callbacks regarding test execution to what it
         let testPrinters =
             {
-                beforeRun = (fun test -> vsCallback.CaseStarted (test.ToString()))
-                beforeEach = (fun name -> vsCallback.LogInfo(sprintf "starting '%s'" name))
-                summary = (fun results -> vsCallback.LogInfo(sprintf "summary %A" results))
-                passed = (fun name duration -> vsCallback.CasePassed(name, duration))
-                ignored = (fun name message -> vsCallback.CaseSkipped(name, message))
-                failed = (fun name message duration -> vsCallback.CaseFailed(name, message, null, duration))
-                exn = (fun name ex duration -> vsCallback.CaseFailed(name, ex.Message, ex.StackTrace, duration))
+                beforeRun = (fun test -> async { vsCallback.CaseStarted (test.ToString()) })
+                beforeEach = (fun name -> async { vsCallback.LogInfo(sprintf "starting '%s'" name) })
+                info = (fun info -> async { vsCallback.LogInfo(info)}) 
+                summary = (fun results -> async { vsCallback.LogInfo(sprintf "summary %A" results)})
+                passed = (fun name duration -> async {vsCallback.CasePassed(name, duration)})
+                ignored = (fun name message -> async {vsCallback.CaseSkipped(name, message)})
+                failed = (fun name message duration -> async {vsCallback.CaseFailed(name, message, null, duration)})
+                exn = (fun name ex duration -> async {vsCallback.CaseFailed(name, ex.Message, ex.StackTrace, duration)})
             }
         let asm = Assembly.LoadFrom(assemblyPath)
         if not (asm.GetReferencedAssemblies().Any(fun a -> a.Name = "Expecto")) then
             vsCallback.LogInfo(sprintf "Skipping: %s because it does not reference Expecto" assemblyPath)
         else            
-            let tests =
-                match testFromAssembly (asm) with
-                | Some t -> t
-                | None -> TestList ([], Normal)
-            let testList =
-                let allTests = Expecto.Test.toTestCodeList tests
-                vsCallback.LogInfo(sprintf "All tests: %d" (allTests.Count()))
-                if testsToInclude = null then
-                    allTests
-                else
-                    let requiredTests = testsToInclude |> HashSet
-                    allTests
-                    |> Seq.filter (fun (name, _, _) -> requiredTests.Contains(name))
-            vsCallback.LogInfo(sprintf "Number of tests included: %d" (testList.Count()))
-            let pmap (f: _ -> _) (s: _ seq) = s.AsParallel().Select(f) :> _ seq
-            evalTestList testPrinters pmap testList
-            //evalTestList testPrinters Seq.map testList
-            |> Seq.toList   // Force evaluation
-            |> ignore
+            let tests = match testFromAssembly (asm) with
+                        | Some t -> t
+                        | None -> TestList ([], Normal)
+
+            let testList = Expecto.Test.toTestCodeList tests;
+            
+            vsCallback.LogInfo(sprintf "All tests: %d" (testList.Count()))
+
+            let includedInCurrentTests testName = 
+                match testsToInclude with
+                | null -> true
+                | _ -> testsToInclude.Contains(testName)
+            
+            let testsToRun = match testsToInclude with
+                             | null -> tests
+                             | _ -> tests |> Expecto.Test.filter includedInCurrentTests
+           
+
+            vsCallback.LogInfo(sprintf "Number of tests included: %d" ((testList |> List.map (fun ft -> ft.name) |> List.filter includedInCurrentTests).Count()))
+            
+            let conf = { defaultConfig with printer = testPrinters }
+            evalPar conf testsToRun |> ignore
 
 type AssemblyExecutor(proxyHandler: IObserver<string * string>, assemblyPath: string, testsToInclude: string[]) =
     let host = new TestAssemblyHost(assemblyPath)
