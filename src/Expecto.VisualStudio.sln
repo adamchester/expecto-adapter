@@ -16,11 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
-		..\scripts\build.cmd = ..\scripts\build.cmd
 		Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.nuspec = Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.nuspec
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
-		..\scripts\test.cmd = ..\scripts\test.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{36CD8A01-4EEA-4428-A1D0-F4A2361471E9}"
