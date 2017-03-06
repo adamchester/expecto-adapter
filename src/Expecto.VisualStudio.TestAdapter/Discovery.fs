@@ -38,22 +38,7 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
     inherit MarshalByRefObjectInfiniteLease()
     let observer = proxyHandler.Item1
 
-    let isFsharpFuncType t =
-        let baseType =
-            let rec findBase (t:Type) =
-                if t.BaseType = typeof<obj> then
-                    t
-                else
-                    findBase t.BaseType
-            findBase t
-        baseType.IsGenericType && baseType.GetGenericTypeDefinition() = typedefof<FSharpFunc<unit, unit>>
-
-    // If the test function we've found doesn't seem to be in the test assembly, it's
-    // possible we're looking at an FsCheck 'testProperty' style check. In that case,
-    // the function of interest (i.e., the one in the test assembly, and for which we
-    // might be able to find corresponding source code) is referred to in a field
-    // of the function object.
-    let getFuncTypeToUse (testFunc:TestCode) (asm:Assembly) =
+    let getFuncTypeAndMethodToUse (testFunc:TestCode) (asm:Assembly) =
         let traverseObjectGraph (root : obj) =
             //Safeguard against circular references
             let rec inner traversed current = seq {
@@ -78,29 +63,15 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
             }
             inner Set.empty root
 
-        let t = match testFunc with
-                | Sync tc -> tc.GetType() 
-                | Async tc ->
-                      let result = query {
-                          for o in traverseObjectGraph tc do
-                          let oType = o.GetType()
-                          where (oType.Assembly.FullName = asm.FullName)
-                          for m in oType.GetMethods() do
-                          where (m.Name = "Invoke" && m.DeclaringType = oType)
-                          select oType
-                          headOrDefault
-                      }
-
-                      if result = null then tc.GetType() else result
-        if t.Assembly.FullName = asm.FullName then
-            t
-        else
-            let nestedFunc =
-                 t.GetFields()
-                |> Seq.tryFind (fun f -> isFsharpFuncType f.FieldType)
-            match nestedFunc with
-                | Some f -> f.GetValue(testFunc).GetType()
-                | None -> t
+        query {
+            for o in traverseObjectGraph testFunc do
+            let oType = o.GetType()
+            where (oType.Assembly.FullName = asm.FullName)
+            for m in oType.GetMethods() do
+            where (m.Name = "Invoke" && m.DeclaringType = oType)
+            select (Some (oType, m))
+            headOrDefault
+        }
 
     member this.DiscoverTests(source: string) =
         let asm = Assembly.LoadFrom(source)
@@ -114,15 +85,11 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
                 | None -> TestList ([], Normal)
             Expecto.Test.toTestCodeList tests
             |> Seq.map (fun flatTest ->
-                let t = getFuncTypeToUse flatTest.test asm
-                let m =
-                    query
-                      {
-                        for m in t.GetMethods() do
-                        where ((m.Name = "Invoke") && (m.DeclaringType = t))
-                        exactlyOne
-                      }
-                new DiscoveryResult(flatTest.name, t.FullName, m.Name))
+                let (typeName, methodName) =
+                    match getFuncTypeAndMethodToUse flatTest.test asm with
+                    | None -> "Unknown", "Unknown"
+                    | Some (t, m) -> t.FullName, m.Name
+                new DiscoveryResult(flatTest.name, typeName, methodName))
             |> Array.ofSeq
 
 [<FileExtension(".dll")>]
