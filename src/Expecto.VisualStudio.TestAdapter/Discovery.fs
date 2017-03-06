@@ -54,9 +54,44 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
     // might be able to find corresponding source code) is referred to in a field
     // of the function object.
     let getFuncTypeToUse (testFunc:TestCode) (asm:Assembly) =
+        let traverseObjectGraph (root : obj) =
+            //Safeguard against circular references
+            let rec inner traversed current = seq {
+                let currentComparable = {
+                    new obj() with
+                        member __.Equals(other) = current.Equals other
+                        member __.GetHashCode() = current.GetHashCode()
+                    interface IComparable with
+                        member this.CompareTo(other) =
+                              this.GetHashCode().CompareTo(other.GetHashCode())
+                }
+                if current = null ||
+                   Set.contains currentComparable traversed then do () else
+
+                let newTraversed = Set.add currentComparable traversed
+                yield current
+                yield! current.GetType().GetFields(BindingFlags.Instance |||
+                                                   BindingFlags.NonPublic |||
+                                                   BindingFlags.Public)
+                       |> Seq.collect (fun info -> info.GetValue(current)
+                                                   |> inner newTraversed)
+            }
+            inner Set.empty root
+
         let t = match testFunc with
                 | Sync tc -> tc.GetType() 
-                | Async tc -> tc.GetType()
+                | Async tc ->
+                      let result = query {
+                          for o in traverseObjectGraph tc do
+                          let oType = o.GetType()
+                          where (oType.Assembly.FullName = asm.FullName)
+                          for m in oType.GetMethods() do
+                          where (m.Name = "Invoke" && m.DeclaringType = oType)
+                          select oType
+                          headOrDefault
+                      }
+
+                      if result = null then tc.GetType() else result
         if t.Assembly.FullName = asm.FullName then
             t
         else
