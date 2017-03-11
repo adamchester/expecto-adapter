@@ -126,7 +126,7 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
                 beforeRun = (fun test -> async { vsCallback.CaseStarted (test.ToString()) })
                 beforeEach = (fun name -> async { vsCallback.LogInfo(sprintf "starting '%s'" name) })
                 info = (fun info -> async { vsCallback.LogInfo(info)}) 
-                summary = (fun results -> async { vsCallback.LogInfo(sprintf "summary %A" results)})
+                summary = (fun results summary -> async { vsCallback.LogInfo(sprintf "summary %A" summary)})
                 passed = (fun name duration -> async {vsCallback.CasePassed(name, duration)})
                 ignored = (fun name message -> async {vsCallback.CaseSkipped(name, message)})
                 failed = (fun name message duration -> async {vsCallback.CaseFailed(name, message, null, duration)})
@@ -157,7 +157,7 @@ type ExecuteProxy(proxyHandler: Tuple<IObserver<string * string>>, assemblyPath:
             vsCallback.LogInfo(sprintf "Number of tests included: %d" ((testList |> List.map (fun ft -> ft.name) |> List.filter includedInCurrentTests).Count()))
             
             let conf = { defaultConfig with printer = testPrinters }
-            evalPar conf testsToRun |> ignore
+            runTests conf testsToRun |> ignore
 
 type AssemblyExecutor(proxyHandler: IObserver<string * string>, assemblyPath: string, testsToInclude: string[]) =
     let host = new TestAssemblyHost(assemblyPath)

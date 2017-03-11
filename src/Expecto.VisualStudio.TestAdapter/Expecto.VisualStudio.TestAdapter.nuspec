@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Expecto.VisualStudio.TestAdapter</id>
-        <version>1.0.0-alpha005</version>
+        <version>4.0.0-alpha007</version>
         <title>Expecto.VisualStudio.TestAdapter</title>
         <authors>Expecto</authors>
         <owners>adamchester</owners>
@@ -10,10 +10,22 @@
         <projectUrl>https://github.com/adamchester/expecto-adapter</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Visual Studio test adapter for Expecto. Shows Expecto tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</description>
-        <releaseNotes></releaseNotes>
+        <releaseNotes>This version should support >= Expecto 4.0.0</releaseNotes>
         <copyright>Copyright © 2016 Ian Griffiths</copyright>
         <tags>Expecto, Visual Studio, Test Adapter, testadapter</tags>
         <developmentDependency>true</developmentDependency>
+        <dependencies>
+          <!--
+          Even thoough this is distributed with it's own Expecto.dll as
+          part of the 'tools' assemblies, this let's the end user know we 
+          can only support Expecto 4.x versions because this adapter is 
+          compiled against that semver API surface.
+        
+          We assume Expecto 5.0 will break something that prevents this
+          test adapter package from being used with it.
+          -->
+          <dependency id="Expecto" version="[4.0,5.0)" />
+        </dependencies>
     </metadata>
     <files>
         <file src="bin/Release/Expecto.VisualStudio.TestAdapter.dll" target="tools\Expecto.VisualStudio.TestAdapter.dll" />

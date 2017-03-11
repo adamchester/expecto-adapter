@@ -70,8 +70,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Expecto">
-      <HintPath>..\packages\Expecto.3.2.0\lib\net40\Expecto.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Expecto.4.0.0\lib\net40\Expecto.dll</HintPath>
     </Reference>
     <Reference Include="Expecto.FsCheck">
       <HintPath>..\packages\Expecto.FsCheck.3.2.0\lib\net40\Expecto.FsCheck.dll</HintPath>
