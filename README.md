@@ -7,4 +7,13 @@ This was originally developed as the [Fuchu Adapter](https://github.com/interact
 
 ## Usage
 
-Use the NuGet package manager to add a reference to the [Expecto.VisualStudio.TestAdapter] (https://www.nuget.org/packages/Expecto.VisualStudio.TestAdapter/) package to a test project that uses Expecto. (There is no need to install anything globally.) Visual Studio will detect the presence of the test adapter, and will use it to populate the Test Explorer and run tests.
+If you're using [paket](https://fsprojects.github.io/Paket/):
+ 1. add `nuget Expecto.VisualStudio.TestAdapter version_in_path: true` to your `paket.dependencies` file
+ 1. add `Expecto.VisualStudio.TestAdapter` to your `paket.references` file in the Exe test project.
+ 1. run `paket install`, then in the same folder as your test executable project, 
+
+note: paket might generate a `packages.config` automatically for you. add it to your test exe project file.
+
+If you are using NuGet package manager, just use NuGet to add [Expecto.VisualStudio.TestAdapter] (https://www.nuget.org/packages/Expecto.VisualStudio.TestAdapter/) to your Exe test project.
+
+In both cases, Visual Studio should read the `packages.config` and detect the presense of the test adapter, and then will use it to populate the Test Explorer and run tests.
