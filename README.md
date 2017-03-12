@@ -14,6 +14,10 @@ If you're using [paket](https://fsprojects.github.io/Paket/):
 
 note: paket might generate a `packages.config` automatically for you. add it to your test exe project file.
 
+![image](https://cloud.githubusercontent.com/assets/570470/23829702/b08a9924-0744-11e7-910f-fb9fd06789d6.png)
+
 If you are using NuGet package manager, just use NuGet to add [Expecto.VisualStudio.TestAdapter] (https://www.nuget.org/packages/Expecto.VisualStudio.TestAdapter/) to your Exe test project.
+
+![image](https://cloud.githubusercontent.com/assets/570470/23829697/97c5f10e-0744-11e7-91e6-f8b0ebfa7bf2.png)
 
 In both cases, Visual Studio should read the `packages.config` and detect the presense of the test adapter, and then will use it to populate the Test Explorer and run tests.
