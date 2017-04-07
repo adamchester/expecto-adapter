@@ -1,7 +1,7 @@
 # expecto-adapter
 Visual Studio test adapter for Expecto
 
-This adapter enable tests based on the [Expecto] (https://github.com/haf/Expecto) F# test framework to show up in Visual Studio's **Text Explorer** window, and also in Visual Studio Online builds.
+This adapter enable tests based on the [Expecto](https://github.com/haf/Expecto) F# test framework to show up in Visual Studio's **Test Explorer** window, and also in Visual Studio Online builds.
 
 This was originally developed as the [Fuchu Adapter](https://github.com/interactsw/fuchu-adapter).
 
@@ -16,7 +16,7 @@ note: paket might generate a `packages.config` automatically for you. add it to 
 
 ![image](https://cloud.githubusercontent.com/assets/570470/23829702/b08a9924-0744-11e7-910f-fb9fd06789d6.png)
 
-If you are using NuGet package manager, just use NuGet to add [Expecto.VisualStudio.TestAdapter] (https://www.nuget.org/packages/Expecto.VisualStudio.TestAdapter/) to your Exe test project.
+If you are using NuGet package manager, just use NuGet to add [Expecto.VisualStudio.TestAdapter](https://www.nuget.org/packages/Expecto.VisualStudio.TestAdapter/) to your Exe test project.
 
 ![image](https://cloud.githubusercontent.com/assets/570470/23829697/97c5f10e-0744-11e7-91e6-f8b0ebfa7bf2.png)
 
