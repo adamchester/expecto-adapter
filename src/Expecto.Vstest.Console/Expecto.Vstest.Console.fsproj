@@ -24,10 +24,10 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Debug\Library1.XML</DocumentationFile>
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>Expecto.Vstest.Console.exe</StartArguments>
+    <StartArguments>Expecto.Vstest.Console.exe /testadapterpath:.</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
