@@ -24,10 +24,10 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Debug\Library1.XML</DocumentationFile>
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</StartProgram>
+    <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe</StartProgram>
     <StartWorkingDirectory>
     </StartWorkingDirectory>
-    <StartArguments>Expecto.Vstest.Console.exe /testadapterpath:.</StartArguments>
+    <StartArguments>Expecto.Vstest.Console.exe</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -66,11 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Argu">
-      <HintPath>..\packages\Argu.3.2.0\lib\net40\Argu.dll</HintPath>
+      <HintPath>..\packages\Argu.3.7.0\lib\net40\Argu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Expecto">
-      <HintPath>..\packages\Expecto.4.0.0\lib\net40\Expecto.dll</HintPath>
+      <HintPath>..\packages\Expecto.5.0.0-beta1\lib\net40\Expecto.dll</HintPath>
     </Reference>
     <Reference Include="Expecto.FsCheck">
       <HintPath>..\packages\Expecto.FsCheck.3.2.0\lib\net40\Expecto.FsCheck.dll</HintPath>
@@ -85,19 +85,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
+      <HintPath>..\packages\Mono.Cecil.0.10.0-beta5\lib\net40\Mono.Cecil.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
+      <HintPath>..\packages\Mono.Cecil.0.10.0-beta5\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>..\packages\Mono.Cecil.0.10.0-beta5\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
+      <HintPath>..\packages\Mono.Cecil.0.10.0-beta5\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
