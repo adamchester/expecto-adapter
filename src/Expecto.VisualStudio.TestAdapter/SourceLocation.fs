@@ -2,7 +2,8 @@
 
 open System.Linq
 open System.Runtime.CompilerServices
-
+open System.Collections.Generic
+open Mono.Cecil.Cil
 open Mono.Cecil
 open Mono.Cecil.Rocks
 
@@ -43,10 +44,21 @@ type SourceLocationFinder(assemblyPath:string) =
                 | None -> ()
           }
 
+    let getSequencePoint(mapping: IDictionary<Instruction, SequencePoint>, instruction): SequencePoint =
+        let (success, value) = mapping.TryGetValue instruction
+        value
+
+    let isStartDifferentThanHidden(seqPoint: SequencePoint) =
+        if seqPoint = null then false
+        else if seqPoint.StartLine <> lineNumberIndicatingHiddenLine then true
+        else false
+
     let getFirstOrDefaultSequencePoint (m:MethodDefinition) =
+        let mapping = m.DebugInformation.GetSequencePointMapping()
+        
         m.Body.Instructions
-        |> Seq.tryFind (fun i -> (i.SequencePoint <> null && i.SequencePoint.StartLine <> lineNumberIndicatingHiddenLine))
-        |> Option.map (fun i -> i.SequencePoint)
+        |> Seq.tryFind (fun i -> (getSequencePoint(mapping, i) |> isStartDifferentThanHidden))
+        |> Option.map (fun i -> (getSequencePoint(mapping, i)))
 
     member this.getSourceLocation className methodName =
         match getMethods className with
