@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Visual Studio test adapter for Expecto. Shows Expecto tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</description>
         <releaseNotes>This version should support >= Expecto 4.0.0</releaseNotes>
-        <copyright>Copyright © 2016 Ian Griffiths</copyright>
+        <copyright>Copyright © 2016 Ian Griffiths, Copyright © 2017 Expecto Visual Studio Test Adapter Contributors</copyright>
         <tags>Expecto, Visual Studio, Test Adapter, testadapter</tags>
         <developmentDependency>true</developmentDependency>
         <dependencies>
