@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Expecto.VisualStudio.TestAdapter</id>
-        <version>4.0.0-alpha007</version>
+        <version>5.0.0-alpha008</version>
         <title>Expecto.VisualStudio.TestAdapter</title>
         <authors>Expecto</authors>
         <owners>adamchester</owners>
@@ -24,7 +24,7 @@
           We assume Expecto 5.0 will break something that prevents this
           test adapter package from being used with it.
           -->
-          <dependency id="Expecto" version="[4.0,5.0)" />
+          <dependency id="Expecto" version="[5.0.0-beta1,6.0)" />
         </dependencies>
     </metadata>
     <files>
