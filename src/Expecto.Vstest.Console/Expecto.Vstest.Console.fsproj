@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Library1</RootNamespace>
     <AssemblyName>Expecto.Vstest.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>Expecto.Vstest.Console</Name>
