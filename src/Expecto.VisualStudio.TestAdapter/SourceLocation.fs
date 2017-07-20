@@ -19,7 +19,7 @@ type SourceLocationFinder(assemblyPath:string) =
 
     let types =
         let readerParams = new ReaderParameters( ReadSymbols = true )
-        let moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, readerParams)
+        use moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, readerParams)
 
         seq { for t in moduleDefinition.GetTypes() -> (t.FullName, t) }
         |> Map.ofSeq
