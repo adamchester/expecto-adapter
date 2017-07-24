@@ -18,8 +18,8 @@ type SourceLocationFinder(assemblyPath:string) =
     let getEcma335TypeName (clrTypeName:string) = clrTypeName.Replace("+", "/")
 
     let types =
-        let readerParams = new ReaderParameters( ReadSymbols = true )
-        use moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, readerParams)
+        let readerParams = new ReaderParameters( ReadSymbols = true, InMemory = true )
+        let moduleDefinition = ModuleDefinition.ReadModule(assemblyPath, readerParams)
 
         seq { for t in moduleDefinition.GetTypes() -> (t.FullName, t) }
         |> Map.ofSeq
