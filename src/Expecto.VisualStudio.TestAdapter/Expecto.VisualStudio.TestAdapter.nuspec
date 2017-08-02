@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Expecto.VisualStudio.TestAdapter</id>
-        <version>5.0.0.1</version>
+        <version>5.0.0.2</version>
         <title>Expecto.VisualStudio.TestAdapter</title>
         <authors>Expecto</authors>
         <owners>adamchester</owners>
@@ -23,7 +23,6 @@
         <file src="bin/Release/Argu.dll" target="tools\Argu.dll" />
         <file src="bin/Release/Expecto.dll" target="tools\Expecto.dll" />
         <file src="bin/Release/FSharp.Core.dll" target="tools\FSharp.Core.dll" />
-        <file src="bin/Release/Mono.Cecil.dll" target="tools\Mono.Cecil.dll" />
         <file src="bin/Release/Mono.Cecil.dll" target="tools\Mono.Cecil.dll" />
         <file src="bin/Release/Mono.Cecil.Mdb.dll" target="tools\Mono.Cecil.Mdb.dll" />
         <file src="bin/Release/Mono.Cecil.Pdb.dll" target="tools\Mono.Cecil.Pdb.dll" />
