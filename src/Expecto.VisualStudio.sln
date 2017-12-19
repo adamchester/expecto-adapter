@@ -1,13 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{7777BB6E-4803-4898-8C82-A7897417B0E6}"
-	ProjectSection(SolutionItems) = preProject
-		NuGet.Config = NuGet.Config
-	EndProjectSection
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.VisualStudio.TestAdapter", "Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.Vstest.Console", "Expecto.Vstest.Console\Expecto.Vstest.Console.fsproj", "{E0E2673B-41FD-4131-B7CE-50EF315DEA64}"
@@ -16,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
-		Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.nuspec = Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.nuspec
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -45,5 +39,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A362EEE-8FBE-4060-BFB6-3CB26EF9AC6D}
 	EndGlobalSection
 EndGlobal
