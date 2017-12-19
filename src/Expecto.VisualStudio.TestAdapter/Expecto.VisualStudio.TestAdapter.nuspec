@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Expecto.VisualStudio.TestAdapter</id>
-        <version>5.0.1</version>
+        <version>5.1.1</version>
         <title>Expecto.VisualStudio.TestAdapter</title>
         <authors>Expecto</authors>
         <owners>adamchester</owners>
@@ -15,7 +15,7 @@
         <tags>Expecto, Visual Studio, Test Adapter, testadapter</tags>
         <developmentDependency>true</developmentDependency>
         <dependencies>
-          <dependency id="Expecto" version="[5.0.0,6.0)" />
+          <dependency id="Expecto" version="[5.0.0,5.1.1)" />
         </dependencies>
     </metadata>
     <files>

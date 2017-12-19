@@ -67,7 +67,7 @@
       <HintPath>..\packages\Argu.3.7.0\lib\net40\Argu.dll</HintPath>
     </Reference>
     <Reference Include="Expecto">
-      <HintPath>..\packages\Expecto.5.0.0\lib\net461\Expecto.dll</HintPath>
+      <HintPath>..\packages\Expecto.5.1.1\lib\net461\Expecto.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core.4.1.17\lib\net45\FSharp.Core.dll</HintPath>
