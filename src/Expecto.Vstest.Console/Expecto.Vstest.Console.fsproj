@@ -21,7 +21,7 @@
     <PackageReference Include="Argu" Version="3.7.*" />
     <PackageReference Include="Expecto" Version="5.*" />
     <PackageReference Include="Expecto.FsCheck" Version="5.*" />
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="11.*" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 
   <ItemGroup>

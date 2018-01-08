@@ -42,7 +42,7 @@
     <PackageReference Include="Expecto" Version="5.*" />
     <PackageReference Include="Newtonsoft.Json" Version="10.*" />
     <PackageReference Include="Mono.Cecil" Version="0.10.0-*" />
-    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="11.*" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 
 </Project>
