@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Expecto.VisualStudio.TestAdapter</id>
+    <version>7.0.0</version>
+    <authors>adamchester, MNie</authors>
+    <owners>adamchester, MNie</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/adamchester/expecto-adapter/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/adamchester/expecto-adapter</projectUrl>
+    <description>Visual Studio test adapter for Expecto. Shows Expecto tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</description>
+    <releaseNotes>This version should support &gt;= Expecto 6.0</releaseNotes>
+    <copyright>Copyright © 2016 Ian Griffiths, Copyright © 2017 Expecto Visual Studio Test Adapter Contributors, Copyright © 2018 Expecto Visual Studio Test Adapter Contributors</copyright>
+    <tags>Expecto, Visual Studio, Test Adapter, testadapter</tags>
+    <repository type="git" url="https://github.com/adamchester/expecto-adapter" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1">
+        <dependency id="Argu" version="3.7.0"  />
+        <dependency id="Expecto" version="[6.0, 7.0)" />
+        <dependency id="FSharp.Core" version="4.1.18"  />
+        <dependency id="Microsoft.TestPlatform.ObjectModel" version="15.5.0"  />
+        <dependency id="Mono.Cecil" version="0.10.0-beta7"  />
+        <dependency id="Newtonsoft.Json" version="10.0.3"  />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

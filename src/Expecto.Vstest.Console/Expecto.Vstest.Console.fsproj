@@ -19,8 +19,8 @@
     <PackageReference Include="FSharp.NET.Sdk" Version="1.0.*" PrivateAssets="All" />
     <PackageReference Include="FSharp.Core" Version="4.1.*" />
     <PackageReference Include="Argu" Version="3.7.*" />
-    <PackageReference Include="Expecto" Version="5.*" />
-    <PackageReference Include="Expecto.FsCheck" Version="5.*" />
+    <PackageReference Include="Expecto" Version="6.0.0" />
+    <PackageReference Include="Expecto.FsCheck" Version="6.0.0" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 
