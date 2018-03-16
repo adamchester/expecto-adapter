@@ -1,4 +1,4 @@
-﻿<Project Sdk="FSharp.NET.Sdk;Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -10,17 +10,17 @@
     <Authors>adamchester, MNie</Authors>
     <Description>Visual Studio test adapter for Expecto. Shows Expecto tests in Visual Studio's Test Explorer, and also enables them to be run in Visual Studio Online builds.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>This version should support &gt;= Expecto 5.1.2</PackageReleaseNotes>
+    <PackageReleaseNotes>This version should support &gt;= Expecto 7.0.0</PackageReleaseNotes>
     <Copyright>Copyright © 2016 Ian Griffiths, Copyright © 2017 Expecto Visual Studio Test Adapter Contributors</Copyright>
     <PackageTags>Expecto, Visual Studio, Test Adapter, testadapter</PackageTags>
-    <Version>6.0.1</Version>
+    <Version>8.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/adamchester/expecto-adapter</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/adamchester/expecto-adapter/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/adamchester/expecto-adapter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>6.0.1</AssemblyVersion>
-    <FileVersion>6.0.1</FileVersion>
+    <AssemblyVersion>8.0.0</AssemblyVersion>
+    <FileVersion>8.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,10 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.NET.Sdk" Version="1.0.*" PrivateAssets="All" />
     <PackageReference Include="FSharp.Core" Version="4.1.*" />
-    <PackageReference Include="Argu" Version="3.7.*" />
-    <PackageReference Include="Expecto" Version="6.0.0" />
+    <PackageReference Include="Expecto" Version="7.*" />
     <PackageReference Include="Newtonsoft.Json" Version="10.*" />
     <PackageReference Include="Mono.Cecil" Version="0.10.0-*" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
