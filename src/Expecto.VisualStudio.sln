@@ -3,14 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.VisualStudio.TestAdapter", "Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Expecto.VisualStudio.TestAdapter", "Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj", "{1F583D48-8771-45B4-9793-60A69DB06C61}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.Vstest.Console", "Expecto.Vstest.Console\Expecto.Vstest.Console.fsproj", "{E0E2673B-41FD-4131-B7CE-50EF315DEA64}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Expecto.Vstest.Console", "Expecto.Vstest.Console\Expecto.Vstest.Console.fsproj", "{E0E2673B-41FD-4131-B7CE-50EF315DEA64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2758865-8826-4288-8438-274CC5E6A611}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
+		..\nuspec\Expecto.VisualStudio.TestAdapter.nuspec = ..\nuspec\Expecto.VisualStudio.TestAdapter.nuspec
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 	EndProjectSection

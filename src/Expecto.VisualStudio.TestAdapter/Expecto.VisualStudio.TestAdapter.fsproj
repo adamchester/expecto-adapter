@@ -13,14 +13,14 @@
     <PackageReleaseNotes>This version should support &gt;= Expecto 7.0.0</PackageReleaseNotes>
     <Copyright>Copyright © 2016 Ian Griffiths, Copyright © 2017 Expecto Visual Studio Test Adapter Contributors</Copyright>
     <PackageTags>Expecto, Visual Studio, Test Adapter, testadapter</PackageTags>
-    <Version>8.0.0</Version>
+    <Version>9.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/adamchester/expecto-adapter</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/adamchester/expecto-adapter/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/adamchester/expecto-adapter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>8.0.0</AssemblyVersion>
-    <FileVersion>8.0.0</FileVersion>
+    <AssemblyVersion>9.0.0</AssemblyVersion>
+    <FileVersion>9.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,10 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="4.1.*" />
-    <PackageReference Include="Expecto" Version="7.*" />
+    <PackageReference Include="FSharp.Core" Version="4.*" />
+    <PackageReference Include="Expecto" Version="8.*" />
     <PackageReference Include="Newtonsoft.Json" Version="10.*" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.0-*" />
+    <PackageReference Include="Mono.Cecil" Version="0.10.*" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 

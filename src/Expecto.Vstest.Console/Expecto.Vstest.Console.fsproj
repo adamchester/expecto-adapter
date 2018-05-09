@@ -16,14 +16,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="4.1.*" />
-    <PackageReference Include="Expecto" Version="7.*" />
-    <PackageReference Include="Expecto.FsCheck" Version="7.*" />
+    <PackageReference Include="FSharp.Core" Version="4.*" />
+    <PackageReference Include="Expecto" Version="8.*" />
+    <PackageReference Include="Expecto.FsCheck" Version="8.*" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>
