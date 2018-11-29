@@ -51,6 +51,7 @@ type DiscoverProxy(proxyHandler:Tuple<IObserver<string>>) =
                               this.GetHashCode().CompareTo(other.GetHashCode())
                 }
                 if current = null ||
+                   box current :? Pointer ||
                    Set.contains currentComparable traversed then do () else
 
                 let newTraversed = Set.add currentComparable traversed
