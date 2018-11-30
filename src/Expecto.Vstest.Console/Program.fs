@@ -4,6 +4,13 @@ open Expecto
 open Expecto.ExpectoFsCheck
 open FsCheck
 
+type UserGen =
+  static member NegativeInt32() =
+    Arb.Default.Int32()
+    |> Arb.mapFilter (fun x -> -abs x) (fun x -> x < 0)
+
+let config = { FsCheckConfig.defaultConfig with arbitrary = [ typeof<UserGen> ] }
+
 [<Tests>]
 let tests =
   testList "samples" [
@@ -17,6 +24,9 @@ let tests =
 
     testProperty "Addition is commutative" <| fun a b ->
       a + b = b + a
+
+    testPropertyWithConfig config "Can set config arbitrary" <| fun a ->
+      a < 0
   ]
 
 [<EntryPoint>]
