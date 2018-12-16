@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Expecto.VisualStudio.TestAdapter</id>
-    <version>10.0.0</version>
+    <version>10.0.1</version>
     <authors>adamchester, MNie</authors>
     <owners>adamchester, MNie</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
