@@ -3,11 +3,11 @@
 open System.Linq
 open Microsoft.VisualStudio.TestPlatform.ObjectModel
 
-let fullyQualified (name:string) =
+let private fullyQualified (name:string) =
     //Expecto uses / instead of . as separator
     name.Replace("/", ".")
 
-let traitName = "ExpectoTestName"
+let private traitName = "ExpectoTestName"
 
 let testCase source name =
     let tc = new TestCase(fullyQualified name, Ids.ExecutorUri, source)
