@@ -17,6 +17,7 @@ open Expecto.Impl
 
 open Filters
 open RemotingHelpers
+open TestCases
 
         
 type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:string) =
@@ -26,17 +27,18 @@ type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:st
             ()
         member x.OnError(error: exn): unit = 
             recorder.SendMessage(TestMessageLevel.Error, error.ToString())
-        member x.OnNext((messageType, message): string * string): unit = 
+        member x.OnNext((messageType, message): string * string): unit =
+            let createCase = testCase assemblyPath
             match messageType with
             | "LogInfo" -> recorder.SendMessage(TestMessageLevel.Informational, message)
             | "CaseStarted" ->
-                let testCase = new TestCase(message, Ids.ExecutorUri, assemblyPath)
+                let testCase = createCase message
                 recorder.RecordStart(testCase)
             | "CasePassed" ->
                 let d = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)
                 let name = d.["name"]
                 let duration = TimeSpan.ParseExact(d.["duration"], "c", System.Globalization.CultureInfo.InvariantCulture)
-                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let testCase = createCase name
                 let result =
                     new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
                         (testCase,
@@ -52,7 +54,7 @@ type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:st
                 let message = d.["message"]
                 let stackTrace = d.["stackTrace"]
                 let duration = TimeSpan.ParseExact(d.["duration"], "c", System.Globalization.CultureInfo.InvariantCulture)
-                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let testCase = createCase name
                 let result =
                     new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
                         (testCase,
@@ -68,7 +70,7 @@ type TestExecutionRecorderProxy(recorder:ITestExecutionRecorder, assemblyPath:st
                 let d = JsonConvert.DeserializeObject<Dictionary<string, string>>(message)
                 let name = d.["name"]
                 let message = d.["message"]
-                let testCase = new TestCase(name, Ids.ExecutorUri, assemblyPath)
+                let testCase = createCase name
                 let result =
                     new Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult
                         (testCase,
@@ -203,12 +205,9 @@ type ExpectoTestExecutor() =
                         (fun testGroup ->
                             let assemblyPath = testGroup.Key
                             let callbackProxy:IObserver<string*string> = new TestExecutionRecorderProxy(frameworkHandle, assemblyPath) :> IObserver<string*string>
-                            let testNames =
-                                query
-                                  {
-                                    for test in testGroup do
-                                    select test.FullyQualifiedName
-                                  }
+                            let testNames = 
+                                testGroup
+                                |> Seq.map testName
                                 |> Array.ofSeq
                             new AssemblyExecutor(callbackProxy, assemblyPath, testNames))
                     |> Array.ofSeq
