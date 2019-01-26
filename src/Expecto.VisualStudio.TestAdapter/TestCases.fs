@@ -4,7 +4,6 @@ open System.Linq
 open Microsoft.VisualStudio.TestPlatform.ObjectModel
 
 let private fullyQualified (name:string) =
-    //Expecto uses / instead of . as separator
     name.Replace("/", ".")
 
 let private traitName = "ExpectoTestName"
