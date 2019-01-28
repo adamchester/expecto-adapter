@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{36CD
 		..\scripts\test.cmd = ..\scripts\test.cmd
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{987EBA77-C92E-46E7-B163-C1967ED14837}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Expecto.VisualStudio.TestAdapter.Tests", "..\tests\Expecto.VisualStudio.TestAdapter.Tests\Expecto.VisualStudio.TestAdapter.Tests.fsproj", "{00C47C44-B8A0-4D68-89D2-80BE039F785B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,9 +41,16 @@ Global
 		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0E2673B-41FD-4131-B7CE-50EF315DEA64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00C47C44-B8A0-4D68-89D2-80BE039F785B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00C47C44-B8A0-4D68-89D2-80BE039F785B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00C47C44-B8A0-4D68-89D2-80BE039F785B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00C47C44-B8A0-4D68-89D2-80BE039F785B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{00C47C44-B8A0-4D68-89D2-80BE039F785B} = {987EBA77-C92E-46E7-B163-C1967ED14837}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A362EEE-8FBE-4060-BFB6-3CB26EF9AC6D}

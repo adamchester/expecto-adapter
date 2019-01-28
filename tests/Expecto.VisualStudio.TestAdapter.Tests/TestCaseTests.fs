@@ -3,7 +3,7 @@
 open Expecto
 
 [<Tests>]
-let tests =
+let testCaseTests =
     testList "TestAdapter tests" [
         testCase "TestCases are fully qualified with dots from slashes" <| fun _ ->
             let name = "tests/hello/world"

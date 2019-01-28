@@ -13,14 +13,14 @@
     <PackageReleaseNotes>This version should support &gt;= Expecto 8.6.0</PackageReleaseNotes>
     <Copyright>Copyright © 2016 Ian Griffiths, Copyright © 2017 Expecto Visual Studio Test Adapter Contributors</Copyright>
     <PackageTags>Expecto, Visual Studio, Test Adapter, testadapter</PackageTags>
-    <Version>10.0.1</Version>
+    <Version>10.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/adamchester/expecto-adapter</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/adamchester/expecto-adapter/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/adamchester/expecto-adapter</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>10.0.1</AssemblyVersion>
-    <FileVersion>10.0.1</FileVersion>
+    <AssemblyVersion>10.0.2</AssemblyVersion>
+    <FileVersion>10.0.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

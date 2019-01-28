@@ -2,17 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <RootNamespace>Expecto.Vstest.Console</RootNamespace>
-    <AssemblyName>Expecto.Vstest.Console</AssemblyName>
-    <Name>Expecto.Vstest.Console</Name>
     <OutputType>exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="TestCaseTests.fs" />
     <Compile Include="Program.fs" />
-    <Content Include="App.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,11 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <ProjectReference Include="..\..\src\Expecto.VisualStudio.TestAdapter\Expecto.VisualStudio.TestAdapter.fsproj" />
   </ItemGroup>
 
 </Project>
