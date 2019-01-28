@@ -37,8 +37,8 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="4.*" />
-    <PackageReference Include="Expecto" Version="8.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.*" />
+    <PackageReference Include="Expecto" Version="8.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Mono.Cecil" Version="0.10.*" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>

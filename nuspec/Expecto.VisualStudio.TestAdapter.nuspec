@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>Expecto.VisualStudio.TestAdapter</id>
-    <version>10.0.1</version>
+    <version>10.0.2</version>
     <authors>adamchester, MNie</authors>
     <owners>adamchester, MNie</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -19,7 +19,7 @@
         <dependency id="FSharp.Core" version="[4.0, 5.0)"  />
         <dependency id="Microsoft.TestPlatform.ObjectModel" version="[15.0, 16.0)"  />
         <dependency id="Mono.Cecil" version="[0.10.0, 0.11.0)"  />
-        <dependency id="Newtonsoft.Json" version="[10.0, 11.0)"  />
+        <dependency id="Newtonsoft.Json" version="[11.0.2, 12.0)"  />
       </group>
     </dependencies>
   </metadata>

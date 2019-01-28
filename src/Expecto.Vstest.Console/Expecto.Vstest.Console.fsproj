@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="4.*" />
-    <PackageReference Include="Expecto" Version="8.*" />
-    <PackageReference Include="Expecto.FsCheck" Version="8.*" />
+    <PackageReference Include="Expecto" Version="8.7.0" />
+    <PackageReference Include="Expecto.FsCheck" Version="8.7.0" />
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.*" />
   </ItemGroup>
 
