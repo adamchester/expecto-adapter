@@ -14,6 +14,7 @@ open Expecto.Impl
 open Filters
 open RemotingHelpers
 open SourceLocation
+open TestCases
 
 type DiscoveryResult =
     struct
@@ -111,7 +112,7 @@ type Discoverer() =
                     let testList = discoverProxy.DiscoverTests(assemblyPath)
                     let locationFinder = new SourceLocationFinder(assemblyPath)
                     for { TestCode = code; TypeName = typeName; MethodName = methodName } in testList do
-                        let tc = new TestCase(code, Ids.ExecutorUri, assemblyPath)
+                        let tc = testCase assemblyPath code
                         match locationFinder.getSourceLocation typeName methodName with
                         | Some location ->
                             tc.CodeFilePath <- location.SourcePath
