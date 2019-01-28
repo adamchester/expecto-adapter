@@ -28,6 +28,7 @@
       <Link>CommonAssemblyInfo.fs</Link>
     </Compile>
     <Compile Include="Ids.fs" />
+    <Compile Include="TestCases.fs" />
     <Compile Include="RemotingHelpers.fs" />
     <Compile Include="Filters.fs" />
     <Compile Include="SourceLocation.fs" />
